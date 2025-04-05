@@ -7,7 +7,7 @@ This is a modern c++ api wrapper for the FastDDS-API.
 ```cpp
 #include <fastdds_modern_cpp_api/dds/dds.hpp>
 
-    int main(int argc, char** argv) {
+int main(int argc, char** argv) {
 
     namespace dds = fastdds_modern_cpp_api::dds;
 
