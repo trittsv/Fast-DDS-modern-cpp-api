@@ -1,20 +1,8 @@
-cmake_minimum_required(VERSION 3.20)
-
 project(fastdds_modern_cpp_example VERSION 1 LANGUAGES CXX)
 
-# Find requirements
-if(NOT fastcdr_FOUND)
-    find_package(fastcdr 2 REQUIRED)
-endif()
-
-if(NOT fastdds_FOUND)
-    find_package(fastdds 3 REQUIRED)
-endif()
-
+find_package(fastdds 3 REQUIRED)
 
 #${FASTDDSGEN_EXE} -cs -I ${CMAKE_CURRENT_SOURCE_DIR} -language c++ -d "${CMAKE_BINARY_DIR}" HelloWorldData.idl
-
-
 
 add_executable(publisher_app publisher_app.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gen/HelloWorldPubSubTypes.cxx

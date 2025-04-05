@@ -1,6 +1,6 @@
 # Fast-DDS-modern-cpp-api
 
-This is a modern c++ api wrapper for the FastDDS-API.
+This is a [ISO/IEC C++ PSM](https://www.omg.org/spec/DDS-PSM-Cxx/) (aka modern c++ api) wrapper for the FastDDS-API.
 
 ## Example
 

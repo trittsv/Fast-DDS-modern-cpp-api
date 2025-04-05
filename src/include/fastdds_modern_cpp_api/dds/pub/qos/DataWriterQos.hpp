@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fastdds_modern_cpp_api/dds/core/policy/CorePolicy.hpp>
+
 #include <fastdds/dds/core/condition/Condition.hpp>
 
 #include <fastdds/dds/core/Entity.hpp>

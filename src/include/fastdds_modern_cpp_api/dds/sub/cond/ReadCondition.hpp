@@ -1,5 +1,8 @@
 #pragma once
 
+#include <fastdds_modern_cpp_api/dds/sub/status/DataState.hpp>
+#include <fastdds_modern_cpp_api/dds/sub/DataReader.hpp>
+
 #include <fastdds/dds/subscriber/ReadCondition.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
@@ -19,14 +22,20 @@ namespace dds {
 namespace sub {
 namespace cond {
 
-
 class ReadCondition {
 
 public:
-    ReadCondition(){}
+    ReadCondition(fastdds_modern_cpp_api::dds::sub::IDataReader& reader, fastdds_modern_cpp_api::dds::sub::status::DataState dataState, std::function<void()> callback) {
+
+        m_readCondition = reader.getReader()->create_readcondition(
+            eprosima::fastdds::dds::SampleStateKind::NOT_READ_SAMPLE_STATE,
+            eprosima::fastdds::dds::ANY_VIEW_STATE,
+            eprosima::fastdds::dds::ANY_INSTANCE_STATE
+    );
+
+    }
 
 
-private:
     eprosima::fastdds::dds::ReadCondition* m_readCondition;
 };
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fastdds_modern_cpp_api/dds/core/policy/CorePolicy.hpp>
+
 #include <fastdds/dds/subscriber/ReadCondition.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
@@ -23,22 +25,28 @@ namespace qos {
 class DataReaderQos {
 
 public:
-    DataReaderQos& operator<<(const eprosima::fastdds::dds::OwnershipQosPolicy& rhs) {
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Ownership& rhs) {
         m_qos.ownership(rhs);
         return *this;
     }
-    DataReaderQos& operator<<(const eprosima::fastdds::dds::DurabilityQosPolicy& rhs) {
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Durability& rhs) {
         m_qos.durability(rhs);
         return *this;
     }
-    DataReaderQos& operator<<(const eprosima::fastdds::dds::ReliabilityQosPolicy& rhs) {
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Reliability& rhs) {
         m_qos.reliability(rhs);
         return *this;
     }
-    DataReaderQos& operator<<(const eprosima::fastdds::dds::HistoryQosPolicy& rhs) {
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::History& rhs) {
         m_qos.history(rhs);
         return *this;
     }
+
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DatRepresentation& rhs) {
+        m_qos.representation() = rhs;
+        return *this;
+    }
+
     operator eprosima::fastdds::dds::DataReaderQos() const {
         return m_qos;
     }

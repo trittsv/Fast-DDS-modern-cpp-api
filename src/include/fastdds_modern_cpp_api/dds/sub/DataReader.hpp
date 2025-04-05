@@ -28,8 +28,17 @@ namespace sub {
 template<typename T>
 using LoanedSamples = std::vector<T>;
 
+
+class IDataReader {
+public:
+    virtual eprosima::fastdds::dds::DataReader* getReader() = 0;
+
+    virtual ~IDataReader() = default;
+};
+
+
 template <typename T>
-class DataReader {
+class DataReader : public IDataReader {
 
 public:
     class Selector {
@@ -67,6 +76,10 @@ public:
     }
 
     eprosima::fastdds::dds::DataReader* nativeReader;
+
+    eprosima::fastdds::dds::DataReader* getReader() {
+        return nativeReader;
+    }
 
 private:
     Selector m_selector;
