@@ -1,7 +1,7 @@
 #include "gen/HelloWorld.hpp"
 #include "gen/HelloWorldPubSubTypes.hpp"
 
-#include <trittsv/dds/dds.hpp>
+#include <fastdds_modern_cpp_api/dds/dds.hpp>
 
 #include <iostream>
 #include <chrono>
@@ -26,7 +26,7 @@ BOOL CtrlHandler(DWORD fdwCtrlType) {
 }
 
 int main(int argc, char** argv) {
-	namespace dds = trittsv::dds;
+	namespace dds = fastdds_modern_cpp_api::dds;
 
 	SetConsoleCtrlHandler(CtrlHandler, TRUE);
 
