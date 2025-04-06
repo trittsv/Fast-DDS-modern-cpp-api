@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         msg.message() = "Hello im here!";
 
         while(g_running) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
             writer.write(msg);
 
@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
         }
 
     } catch (const std::exception& e) {
-        LOG << "Exception: " << e.what();;
+        LOG << "Exception: " << e.what();
         return 1;
     }
 

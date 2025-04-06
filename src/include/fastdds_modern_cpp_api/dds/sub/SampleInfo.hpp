@@ -23,7 +23,7 @@ class SampleInfo {
 
 public:
     SampleInfo(){}
-    SampleInfo(eprosima::fastdds::dds::SampleInfo info): m_sampleInfo(info) {
+    SampleInfo(eprosima::fastdds::dds::SampleInfo info): m_sampleInfo(info), m_state(info.instance_state, info.view_state, info.sample_state) {
 
     }
 

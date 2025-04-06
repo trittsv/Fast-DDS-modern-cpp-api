@@ -66,13 +66,13 @@ int main(int argc, char** argv) {
             dds::sub::LoanedSamples<HelloWorld> samples = reader.select(dataState).take();
             for (auto sample : samples) {
                 dds::sub::SampleInfo sampleInfo = sample.info();
-                dds::sub::status::DataState dataState = sampleInfo.state();
-                dds::sub::status::InstanceState instanceState = dataState.instance_state();
+                dds::sub::status::DataState dataStateSample = sampleInfo.state();
+                dds::sub::status::InstanceState instanceStateSample = dataStateSample.instance_state();
 
-                if (sampleInfo.valid() && instanceState == dds::sub::status::InstanceState::alive()) {
-                    HelloWorld const& t = sample.data();
+                if (sampleInfo.valid() && instanceStateSample == dds::sub::status::InstanceState::alive()) {
+                    const HelloWorld& t = sample.data();
 
-                    LOG << "[Received] (HelloWorld) index: " << t.index() << ", message: " << t.message();
+                    LOG << "[Received] (HelloWorld) index: " << std::to_string(t.index()) << ", message: " << t.message();
                 } else {
                     LOG << "[Received] (HelloWorld) INVALID";
                 }
