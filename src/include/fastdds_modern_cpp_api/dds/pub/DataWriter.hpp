@@ -40,7 +40,7 @@ public:
         dds::pub::DataWriterListener<T>* listener,
         const dds::core::status::StatusMask& mask){
 
-        nativewriter = pub.m_publisher->create_datawriter(topic.nativeTopic, qos);
+        nativewriter = pub.m_publisher->create_datawriter(topic.get_topic(), qos);
         if (nativewriter == nullptr) {
             throw std::runtime_error("DataWriter initialization failed");
         }

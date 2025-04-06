@@ -50,6 +50,12 @@ public:
         return m_pariticpant;
     }
 
+    template <typename T>
+    void register_type() {
+        m_typeSupports.push_back(eprosima::fastdds::dds::TypeSupport(new T()));
+        m_typeSupports.back().register_type(m_pariticpant);
+    }
+
 private:
     void init(uint32_t id, fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos& qos) {
         auto factory = eprosima::fastdds::dds::DomainParticipantFactory::get_instance();
@@ -65,6 +71,8 @@ private:
 
     eprosima::fastdds::dds::DomainParticipant* m_pariticpant;
     fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos m_qos;
+
+    std::vector<eprosima::fastdds::dds::TypeSupport> m_typeSupports;
 };
 
 

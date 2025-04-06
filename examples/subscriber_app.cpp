@@ -23,21 +23,17 @@ int main(int argc, char** argv) {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
 
     try {
-        LOG << "Hello World";
-
-        // Create Participant
+        LOG << "Create Participant...";
         dds::domain::qos::DomainParticipantQos participant_qos;
         dds::domain::DomainParticipant participant(0, participant_qos);
 
-        // Create topic
+        participant.register_type<HelloWorldPubSubType>(); // TODO: find a way to wrap this.
+
+        LOG << "Create topic...";
         dds::topic::qos::TopicQos qos;
         dds::topic::TopicListener<HelloWorld>* listener;
         dds::core::status::StatusMask mask;
 
-        // TODO: find a way to wrap this.
-        REGISTER_PUBSUB_TYPE(HelloWorld, participant.get_participant()); 
-
-        LOG << "Create topic...";
         dds::topic::Topic<HelloWorld> topic(participant, "HelloWorldTopic", qos, listener, mask);
 
         LOG << "Create Subscriber...";

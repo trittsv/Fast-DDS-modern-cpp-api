@@ -201,7 +201,7 @@ public:
 
         m_listener = std::make_shared<MyListener<T>>();
 
-        nativeReader = sub.m_subscriber->create_datareader(topic.nativeTopic, qos, m_listener.get());
+        nativeReader = sub.m_subscriber->create_datareader(topic.get_topic(), qos, m_listener.get());
         if (nativeReader == nullptr) {
             throw std::runtime_error("DataReader initialization failed");
         }
