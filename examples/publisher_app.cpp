@@ -5,6 +5,9 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <iomanip>
+#include <sstream>
+
 #include <windows.h>
 
 std::atomic<bool> g_running = true;
@@ -23,6 +26,8 @@ BOOL CtrlHandler(DWORD fdwCtrlType) {
             return FALSE;
     }
 }
+
+
 
 int main(int argc, char** argv) {
 
@@ -75,7 +80,7 @@ int main(int argc, char** argv) {
         msg.message() = "Hello im here!";
 
         while(g_running) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
             writer.write(msg);
         }

@@ -25,7 +25,7 @@ namespace cond {
 class ReadCondition {
 
 public:
-    ReadCondition(fastdds_modern_cpp_api::dds::sub::IDataReader& reader, fastdds_modern_cpp_api::dds::sub::status::DataState dataState, std::function<void()> callback) {
+    ReadCondition(fastdds_modern_cpp_api::dds::sub::IDataReader& reader, fastdds_modern_cpp_api::dds::sub::status::DataState dataState, std::function<void()> callback): m_callback(callback) {
 
         m_readCondition = reader.getReader()->create_readcondition(
             eprosima::fastdds::dds::SampleStateKind::NOT_READ_SAMPLE_STATE,
@@ -35,7 +35,7 @@ public:
 
     }
 
-
+    std::function<void()> m_callback;
     eprosima::fastdds::dds::ReadCondition* m_readCondition;
 };
 

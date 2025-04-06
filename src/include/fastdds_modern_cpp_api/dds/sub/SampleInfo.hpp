@@ -23,8 +23,21 @@ class SampleInfo {
 
 public:
     SampleInfo(){}
+    SampleInfo(eprosima::fastdds::dds::SampleInfo info): m_sampleInfo(info) {
+
+    }
+
+    dds::sub::status::DataState& state() {
+        return m_state;
+    }
+
+    bool valid() {
+        return m_sampleInfo.valid_data;
+    }
+
 private:
     eprosima::fastdds::dds::SampleInfo m_sampleInfo;
+    dds::sub::status::DataState m_state;
 };
 
 

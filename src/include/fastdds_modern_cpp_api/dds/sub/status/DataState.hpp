@@ -19,6 +19,25 @@ namespace dds {
 namespace sub {
 namespace status {
 
+class InstanceState {
+public:
+    InstanceState(){}
+
+    static InstanceState alive() {
+        return InstanceState();
+    }
+
+    bool operator==(const InstanceState& other) const {
+        return true;
+    }
+
+
+    bool operator!=(const InstanceState& other) const {
+        return !(*this == other);
+    }
+
+};
+    
 
 class DataState {
 public:
@@ -27,7 +46,14 @@ public:
     inline static const DataState any(){
         return DataState();
     }
+
+    InstanceState& instance_state() {
+        return m_instanceState;
+    }
+private:
+    InstanceState m_instanceState;
 };
+
 
 
 }

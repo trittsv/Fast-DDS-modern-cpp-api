@@ -6,6 +6,9 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <iomanip>
+#include <sstream>
+
 #include <windows.h>
 
 std::atomic<bool> g_running = true;
@@ -23,6 +26,18 @@ BOOL CtrlHandler(DWORD fdwCtrlType) {
         default:
             return FALSE;
     }
+}
+
+inline std::string current_timestamp() {
+    using namespace std::chrono;
+
+    auto now = system_clock::now();
+    auto itt = system_clock::to_time_t(now);
+    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
+
+    std::ostringstream oss;
+    oss << std::put_time(std::localtime(&itt), "%F %T") << '.' << std::setw(3) << std::setfill('0') << ms.count();
+    return oss.str();
 }
 
 int main(int argc, char** argv) {
@@ -63,21 +78,41 @@ int main(int argc, char** argv) {
         reader_qos << dds::core::policy::History::KeepAll();*/
         dds::sub::DataReaderListener<HelloWorld>* reader_listener;
         dds::core::status::StatusMask reader_mask;
+        auto dataState = dds::sub::status::DataState::any();
 
         dds::sub::DataReader<HelloWorld> reader(subscriber, topic, reader_qos, reader_listener, reader_mask);
 
-        // The callback wehre we want to receive the data
-        std::function<void()> callback = []() {
-            std::cout << "Received samples ..." << std::endl;
+        // The callback where we want to get notified on new data
+        std::function<void()> callback = [&reader, &dataState]() {
+            std::cout << "[" << current_timestamp() << "] Received samples ..." << std::endl;
+
+            dds::sub::LoanedSamples<HelloWorld> samples = reader.select(dataState).take();
+            for (auto sample : samples) {
+                dds::sub::SampleInfo sampleInfo = sample.info();
+                dds::sub::status::DataState dataState = sampleInfo.state();
+                dds::sub::status::InstanceState instanceState = dataState.instance_state();
+
+                if (sampleInfo.valid() && instanceState == dds::sub::status::InstanceState::alive()) {
+                    HelloWorld const& t = sample.data();
+
+                    std::cout << "[Received] (HelloWorld) index:" << t.index() << ", message: " << t.message() << std::endl;
+                } else {
+                    std::cout << "[Received] (HelloWorld) INVALID" << std::endl;
+                }
+            }
         };
 
         // setup waitset
-        dds::sub::cond::ReadCondition readCondition(reader, dds::sub::status::DataState::any(), callback);
+        dds::sub::cond::ReadCondition readCondition(reader, dataState, callback);
         dds::core::cond::WaitSet waitset;
         waitset += readCondition;
 
         while(g_running) {
-            waitset.dispatch(dds::core::Duration(1, 0)); // better -> dds::core::Duration::infinite()
+            try {
+                waitset.dispatch(dds::core::Duration(1, 0)); // better -> dds::core::Duration::infinite()
+            } catch(const dds::core::TimeoutError& e) {
+                // ok expected - no new message arrived
+            }
         }
 
     } catch (const std::exception& e) {

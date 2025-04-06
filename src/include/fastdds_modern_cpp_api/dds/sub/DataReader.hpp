@@ -3,6 +3,7 @@
 #include <fastdds_modern_cpp_api/dds/topic/Topic.hpp>
 #include <fastdds_modern_cpp_api/dds/sub/DataReaderListener.hpp>
 #include <fastdds_modern_cpp_api/dds/sub/Subscriber.hpp>
+#include <fastdds_modern_cpp_api/dds/sub/SampleInfo.hpp>
 #include <fastdds_modern_cpp_api/dds/sub/qos/DataReaderQos.hpp>
 #include <fastdds_modern_cpp_api/dds/core/status/Status.hpp>
 
@@ -24,9 +25,30 @@ namespace fastdds_modern_cpp_api {
 namespace dds {
 namespace sub {
 
+template<typename T>
+class LoanedSample {
+
+public:
+    LoanedSample(){}
+    LoanedSample(fastdds_modern_cpp_api::dds::sub::SampleInfo sampleInfo, T data) : m_sampleInfo(sampleInfo), m_data(data) {
+        
+    }
+
+    fastdds_modern_cpp_api::dds::sub::SampleInfo& info() {
+        return m_sampleInfo;
+    }
+
+    T& data() {
+        return m_data;
+    }
+
+private:
+    fastdds_modern_cpp_api::dds::sub::SampleInfo m_sampleInfo;
+    T m_data;
+};
 
 template<typename T>
-using LoanedSamples = std::vector<T>;
+using LoanedSamples = std::vector<LoanedSample<T>>;
 
 
 class IDataReader {
@@ -42,15 +64,45 @@ class DataReader : public IDataReader {
 
 public:
     class Selector {
+
     public:
-        Selector() {}
+        Selector(){}
+    
         Selector& state(const dds::sub::status::DataState& s) {
             return *this;
         }
 
         dds::sub::LoanedSamples<T> take() {
-            return dds::sub::LoanedSamples<T>();
+            dds::sub::LoanedSamples<T> loanedSamples;
+
+            eprosima::fastdds::dds::LoanableSequence<T> samples;
+            eprosima::fastdds::dds::SampleInfoSeq sample_infos;
+
+            int32_t max_samples = eprosima::fastdds::dds::LENGTH_UNLIMITED;
+            eprosima::fastdds::dds::SampleStateMask sample_states = eprosima::fastdds::dds::ANY_SAMPLE_STATE;
+            eprosima::fastdds::dds::ViewStateMask view_states = eprosima::fastdds::dds::ANY_VIEW_STATE;
+            eprosima::fastdds::dds::InstanceStateMask instance_states = eprosima::fastdds::dds::ANY_INSTANCE_STATE;
+
+            if (m_nativeReader) {
+                auto ret = m_nativeReader->take(samples, sample_infos, max_samples, sample_states, view_states, instance_states);
+                if (ret == eprosima::fastdds::dds::RETCODE_OK) {
+                    for (size_t i = 0; i < samples.length(); i++) {
+                        loanedSamples.push_back(fastdds_modern_cpp_api::dds::sub::LoanedSample<T>(
+                            fastdds_modern_cpp_api::dds::sub::SampleInfo(sample_infos[i]),
+                            samples[i]
+                        ));
+                    }
+                }
+            }
+
+            return loanedSamples;
         }
+
+        void setReader(eprosima::fastdds::dds::DataReader* nativeReader) {
+            m_nativeReader = nativeReader;
+        }
+    private:
+        eprosima::fastdds::dds::DataReader* m_nativeReader;
     };
 
     DataReader(
@@ -64,18 +116,18 @@ public:
         if (nativeReader == nullptr) {
             throw std::runtime_error("DataReader initialization failed");
         }
-
+        m_selector.setReader(nativeReader);
     }
 
     void close() {
 
     }
 
-    Selector select() {
+    Selector& select(dds::sub::status::DataState dataSate) {
         return m_selector;
     }
 
-    eprosima::fastdds::dds::DataReader* nativeReader;
+    
 
     eprosima::fastdds::dds::DataReader* getReader() {
         return nativeReader;
@@ -83,6 +135,7 @@ public:
 
 private:
     Selector m_selector;
+    eprosima::fastdds::dds::DataReader* nativeReader;
 
 };
 
