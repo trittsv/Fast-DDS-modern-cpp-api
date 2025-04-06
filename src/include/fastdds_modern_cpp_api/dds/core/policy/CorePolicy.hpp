@@ -160,10 +160,10 @@ public:
 
     }
     
-    History(const dds::core::policy::HistoryKind& kind) {
+    History(const dds::core::policy::HistoryKind& kind, int32_t depth = 1) {
         if (kind == HistoryKind::KEEP_LAST) {
             m_policy.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_LAST_HISTORY_QOS;
-            m_policy.depth = 1;
+            m_policy.depth = depth;
         } else if (kind == HistoryKind::KEEP_ALL) {
             m_policy.kind = eprosima::fastdds::dds::HistoryQosPolicyKind::KEEP_ALL_HISTORY_QOS;
         }
@@ -176,6 +176,10 @@ public:
 
     static History KeepAll() {
         return History(HistoryKind::KEEP_ALL);
+    }
+
+    static History KeepLast(int32_t depth) {
+        return History(HistoryKind::KEEP_LAST, depth);
     }
 
     operator eprosima::fastdds::dds::HistoryQosPolicy() const {
