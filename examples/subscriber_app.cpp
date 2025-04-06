@@ -16,10 +16,6 @@ std::atomic<bool> g_running = true;
 
 CTRL_HANDLER_MACRO();
 
-#define DECLARE_PUBSUB_TYPE(T, TPubSubType) \
-    template <> struct PubSubTypeFor<T> { using Type = TPubSubType; }
-
-
 int main(int argc, char** argv) {
 
     namespace dds = fastdds_modern_cpp_api::dds;
