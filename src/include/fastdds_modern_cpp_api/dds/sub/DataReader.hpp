@@ -26,6 +26,39 @@ namespace dds {
 namespace sub {
 
 template<typename T>
+class MyListener : public eprosima::fastdds::dds::DataReaderListener {
+
+public:
+    MyListener() = default;
+    ~MyListener() = default;
+
+    void on_data_available(eprosima::fastdds::dds::DataReader* reader) override {
+        // std::cout << "on_data_available" << std::endl;
+        // use waitset instead
+    }
+
+    void on_requested_incompatible_qos(
+        eprosima::fastdds::dds::DataReader* reader,
+        const eprosima::fastdds::dds::RequestedIncompatibleQosStatus& status) override {
+        std::cout << "QoS mismatch detected: " << status.total_count << " instances with incompatible QoS" << std::endl;
+    }
+
+    void on_liveliness_changed(
+        eprosima::fastdds::dds::DataReader* reader,
+        const eprosima::fastdds::dds::LivelinessChangedStatus& status) override
+    {
+        std::cout << "Liveliness changed. Alive: " << status.alive_count << ", Not alive: " << status.not_alive_count << std::endl;
+    }
+
+    void on_sample_lost(
+        eprosima::fastdds::dds::DataReader* reader,
+        const eprosima::fastdds::dds::SampleLostStatus& status) override {
+        std::cout << "Sample lost. Total lost: " << status.total_count << std::endl;
+    }
+};
+
+
+template<typename T>
 class LoanedSample {
 
 public:
@@ -114,7 +147,9 @@ public:
         dds::sub::DataReaderListener<T>* listener,
         const dds::core::status::StatusMask& mask) {
 
-        nativeReader = sub.m_subscriber->create_datareader(topic.nativeTopic, qos);
+        m_listener = std::make_shared<MyListener<T>>();
+
+        nativeReader = sub.m_subscriber->create_datareader(topic.nativeTopic, qos, m_listener.get());
         if (nativeReader == nullptr) {
             throw std::runtime_error("DataReader initialization failed");
         }
@@ -129,8 +164,6 @@ public:
         return m_selector;
     }
 
-    
-
     eprosima::fastdds::dds::DataReader* getReader() {
         return nativeReader;
     }
@@ -138,6 +171,8 @@ public:
 private:
     Selector m_selector;
     eprosima::fastdds::dds::DataReader* nativeReader;
+
+    std::shared_ptr<MyListener<T>> m_listener;
 
 };
 

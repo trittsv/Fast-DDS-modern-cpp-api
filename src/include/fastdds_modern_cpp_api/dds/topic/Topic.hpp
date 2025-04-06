@@ -95,7 +95,6 @@ public:
         //fastdds_modern_cpp_api::dds::topic::register_type_name<T>::register_type(dp.m_pariticpant); // second registering will have no effect, but will not issue any error.
         //type_.register_type(dp.m_pariticpant);
 
-        std::cout << "ITS: " << typeid(T).name() << std::endl;
         nativeTopic = dp.m_pariticpant->create_topic(name, topic_type_name<T>::value(), qos.nativeQos);
         if (nativeTopic == nullptr) {
             throw std::runtime_error("Topic initialization failed");
