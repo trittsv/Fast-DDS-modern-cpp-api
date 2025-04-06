@@ -34,10 +34,8 @@ int main(int argc, char** argv) {
         dds::topic::TopicListener<HelloWorld>* listener;
         dds::core::status::StatusMask mask;
 
-        LOG << "Register type";;
         // TODO: find a way to wrap this.
-        eprosima::fastdds::dds::TypeSupport type_(new HelloWorldPubSubType()); // TODO: find a way to wrap this.
-        type_.register_type(participant.m_pariticpant);
+        REGISTER_PUBSUB_TYPE(HelloWorld, participant.get_participant()); 
 
         LOG << "Create topic...";;
         dds::topic::Topic<HelloWorld> topic(participant, "HelloWorldTopic", qos, listener, mask);

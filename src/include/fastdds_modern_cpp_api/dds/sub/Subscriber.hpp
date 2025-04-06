@@ -29,7 +29,7 @@ public:
     Subscriber(){}
     Subscriber(const dds::domain::DomainParticipant& dp, const dds::sub::qos::SubscriberQos& qos) {
 
-        m_subscriber = dp.m_pariticpant->create_subscriber(qos);
+        m_subscriber = dp.get_participant()->create_subscriber(qos);
         if (m_subscriber == nullptr) {
             throw std::runtime_error("Subscriber initialization failed");
         }

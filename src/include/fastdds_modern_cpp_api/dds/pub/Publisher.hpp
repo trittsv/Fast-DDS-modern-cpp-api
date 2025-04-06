@@ -20,8 +20,8 @@ public:
     Publisher(){}
     Publisher(const dds::domain::DomainParticipant& dp, const dds::pub::qos::PublisherQos& qos) {
 
-        dp.m_pariticpant->get_default_publisher_qos(pub_qos);
-        m_publisher = dp.m_pariticpant->create_publisher(qos.m_qos);
+        dp.get_participant()->get_default_publisher_qos(pub_qos);
+        m_publisher = dp.get_participant()->create_publisher(qos.m_qos);
         if (m_publisher == nullptr) {
             throw std::runtime_error("Publisher initialization failed");
         }

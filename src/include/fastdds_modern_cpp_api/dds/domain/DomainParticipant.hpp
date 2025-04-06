@@ -46,7 +46,9 @@ public:
         return dds::core::InstanceHandle(m_pariticpant->get_instance_handle());
     }
 
-    eprosima::fastdds::dds::DomainParticipant* m_pariticpant;
+    eprosima::fastdds::dds::DomainParticipant* get_participant() const {
+        return m_pariticpant;
+    }
 
 private:
     void init(uint32_t id, fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos& qos) {
@@ -61,6 +63,7 @@ private:
         init(id, m_qos);
     }
 
+    eprosima::fastdds::dds::DomainParticipant* m_pariticpant;
     fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos m_qos;
 };
 
