@@ -69,7 +69,11 @@ int main(int argc, char** argv) {
         while(g_running) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
-            writer.write(msg);
+            try {
+                writer.write(msg);
+            } catch (const std::exception& e) {
+                LOG << e.what();
+            }
 
             msg.index() = msg.index() + 1;
         }
