@@ -37,3 +37,7 @@ cd build
 cmake -DOPENSSL_INCLUDE_DIR="C:\Program Files\OpenSSL-Win64\include" ..
 cmake --build . --config Release
 ```
+
+## Contributing
+
+Everyone is welcome to participate, just make a pull-request.
