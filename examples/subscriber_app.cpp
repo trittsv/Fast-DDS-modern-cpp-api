@@ -1,5 +1,6 @@
 #include "gen/HelloWorld.hpp"
 #include "gen/HelloWorldPubSubTypes.hpp"
+#include "Utils.hpp"
 
 #include <fastdds_modern_cpp_api/dds/dds.hpp>
 
@@ -13,32 +14,7 @@
 
 std::atomic<bool> g_running = true;
 
-BOOL CtrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType) {
-        case CTRL_C_EVENT:
-            std::cout << "Ctrl + C pressed. Handling signal..." << std::endl;
-            g_running = false;
-            return TRUE;
-        case CTRL_BREAK_EVENT:
-            std::cout << "Ctrl + Break pressed. Handling signal..." << std::endl;
-            g_running = false;
-            return TRUE;
-        default:
-            return FALSE;
-    }
-}
-
-inline std::string current_timestamp() {
-    using namespace std::chrono;
-
-    auto now = system_clock::now();
-    auto itt = system_clock::to_time_t(now);
-    auto ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-
-    std::ostringstream oss;
-    oss << std::put_time(std::localtime(&itt), "%F %T") << '.' << std::setw(3) << std::setfill('0') << ms.count();
-    return oss.str();
-}
+CTRL_HANDLER_MACRO();
 
 int main(int argc, char** argv) {
 
@@ -47,7 +23,7 @@ int main(int argc, char** argv) {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
 
     try {
-        std::cout << "Hello World" << std::endl;
+        LOG << "Hello World";
 
         // Create Participant
         dds::domain::qos::DomainParticipantQos participant_qos;
@@ -58,19 +34,19 @@ int main(int argc, char** argv) {
         dds::topic::TopicListener<HelloWorld>* listener;
         dds::core::status::StatusMask mask;
 
-        std::cout << "Register type" << std::endl;
+        LOG << "Register type";
         eprosima::fastdds::dds::TypeSupport type_(new HelloWorldPubSubType()); // TODO: find a way to wrap this.
         type_.register_type(participant.m_pariticpant);
 
-        std::cout << "Create topic..." << std::endl;
+        LOG << "Create topic...";
         dds::topic::Topic<HelloWorld> topic(participant, "HelloWorldTopic", qos, listener, mask);
 
-        std::cout << "Create Subscriber..." << std::endl;
+        LOG << "Create Subscriber...";
         dds::sub::qos::SubscriberQos sub_qos;
         sub_qos << dds::core::policy::Partition("MyPartition");
         dds::sub::Subscriber subscriber(participant, sub_qos);
 
-        std::cout << "Create Reader..." << std::endl;
+        LOG << "Create Reader...";
         dds::sub::qos::DataReaderQos reader_qos;
         reader_qos << dds::core::policy::DatRepresentation(dds::core::policy::DataRepresentationId::XCDR2);
         reader_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
@@ -85,7 +61,7 @@ int main(int argc, char** argv) {
 
         // The callback where we want to get notified on new data
         std::function<void()> callback = [&reader, &dataState]() {
-            std::cout << "[" << current_timestamp() << "] Received samples ..." << std::endl;
+            LOG << "Received samples ...";
 
             dds::sub::LoanedSamples<HelloWorld> samples = reader.select(dataState).take();
             for (auto sample : samples) {
@@ -96,9 +72,9 @@ int main(int argc, char** argv) {
                 if (sampleInfo.valid() && instanceState == dds::sub::status::InstanceState::alive()) {
                     HelloWorld const& t = sample.data();
 
-                    std::cout << "[Received] (HelloWorld) index: " << t.index() << ", message: " << t.message() << std::endl;
+                    LOG << "[Received] (HelloWorld) index: " << t.index() << ", message: " << t.message();
                 } else {
-                    std::cout << "[Received] (HelloWorld) INVALID" << std::endl;
+                    LOG << "[Received] (HelloWorld) INVALID";
                 }
             }
         };
@@ -117,10 +93,10 @@ int main(int argc, char** argv) {
         }
 
     } catch (const std::exception& e) {
-        std::cout << "Exception: " << e.what() << std::endl;
+        LOG << "Exception: " << e.what();
         return 1;
     }
 
-    std::cout << "Exit..." << std::endl;
+    LOG << "Exit...";
     return 0;
 }

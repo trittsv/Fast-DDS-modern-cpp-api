@@ -1,6 +1,8 @@
-#include <fastdds_modern_cpp_api/dds/dds.hpp>
 #include "gen/HelloWorld.hpp"
 #include "gen/HelloWorldPubSubTypes.hpp"
+#include "Utils.hpp"
+
+#include <fastdds_modern_cpp_api/dds/dds.hpp>
 
 #include <iostream>
 #include <chrono>
@@ -12,22 +14,7 @@
 
 std::atomic<bool> g_running = true;
 
-BOOL CtrlHandler(DWORD fdwCtrlType) {
-    switch (fdwCtrlType) {
-        case CTRL_C_EVENT:
-            std::cout << "Ctrl + C pressed. Handling signal..." << std::endl;
-            g_running = false;
-            return TRUE;
-        case CTRL_BREAK_EVENT:
-            std::cout << "Ctrl + Break pressed. Handling signal..." << std::endl;
-            g_running = false;
-            return TRUE;
-        default:
-            return FALSE;
-    }
-}
-
-
+CTRL_HANDLER_MACRO();
 
 int main(int argc, char** argv) {
 
@@ -36,7 +23,7 @@ int main(int argc, char** argv) {
     SetConsoleCtrlHandler(CtrlHandler, TRUE);
 
     try {
-        std::cout << "Hello World" << std::endl;
+        LOG << "Hello World";
 
         // Create Participant
         dds::domain::qos::DomainParticipantQos participant_qos;
@@ -47,21 +34,21 @@ int main(int argc, char** argv) {
         dds::topic::TopicListener<HelloWorld>* listener;
         dds::core::status::StatusMask mask;
 
-        std::cout << "Register type" << std::endl;
+        LOG << "Register type";;
         // TODO: find a way to wrap this.
         eprosima::fastdds::dds::TypeSupport type_(new HelloWorldPubSubType()); 
         type_.register_type(participant.m_pariticpant);
 
-        std::cout << "Create topic..." << std::endl;
+        LOG << "Create topic...";;
         dds::topic::Topic<HelloWorld> topic(participant, "HelloWorldTopic", qos, listener, mask);
 
-        std::cout << "Create Publisher..." << std::endl;
+        LOG << "Create Publisher...";;
         dds::pub::qos::PublisherQos pub_qos;
         pub_qos << dds::core::policy::Partition("MyPartition");
 
         dds::pub::Publisher publisher(participant, pub_qos);
 
-        std::cout << "Create Writer..." << std::endl;
+        LOG << "Create Writer...";;
         dds::pub::qos::DataWriterQos writer_qos;
         writer_qos << dds::core::policy::DatRepresentation(dds::core::policy::DataRepresentationId::XCDR2);
         writer_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
@@ -74,7 +61,7 @@ int main(int argc, char** argv) {
 
         dds::pub::DataWriter<HelloWorld> writer(publisher, topic, writer_qos, writer_listener, writer_mask);
 
-        std::cout << "Write msg..." << std::endl;
+        LOG << "Write msg...";;
         HelloWorld msg;
         msg.index() = 1;
         msg.message() = "Hello im here!";
@@ -88,10 +75,10 @@ int main(int argc, char** argv) {
         }
 
     } catch (const std::exception& e) {
-        std::cout << "Exception: " << e.what() << std::endl;
+        LOG << "Exception: " << e.what();;
         return 1;
     }
 
-    std::cout << "Exit..." << std::endl;
+    LOG << "Exit...";;
     return 0;
 }
