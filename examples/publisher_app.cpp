@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
         LOG << "Register type";;
         // TODO: find a way to wrap this.
-        eprosima::fastdds::dds::TypeSupport type_(new HelloWorldPubSubType()); 
+        eprosima::fastdds::dds::TypeSupport type_(new HelloWorldPubSubType()); // TODO: find a way to wrap this.
         type_.register_type(participant.m_pariticpant);
 
         LOG << "Create topic...";;
