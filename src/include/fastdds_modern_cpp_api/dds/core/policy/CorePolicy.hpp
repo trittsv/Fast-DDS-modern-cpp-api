@@ -96,7 +96,7 @@ private:
 
 
 
-enum class DurabilityKind { // DurabilityQosPolicyKind
+enum class DurabilityKind {
     VOLATILE = 0,
     TRANSIENT_LOCAL = 1,
     TRANSIENT = 2,
@@ -115,6 +115,7 @@ public:
         } else if (kind == DurabilityKind::TRANSIENT) {
             m_policy.kind = eprosima::fastdds::dds::DurabilityQosPolicyKind::TRANSIENT_DURABILITY_QOS;
         } else if (kind == DurabilityKind::PERSISTENT) {
+            throw std::logic_error("Not implemented!");
         }
     }
     operator eprosima::fastdds::dds::DurabilityQosPolicy() const {

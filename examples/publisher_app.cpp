@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
 
         std::cout << "Create Publisher..." << std::endl;
         dds::pub::qos::PublisherQos pub_qos;
-        //pub_qos << dds::core::policy::Partition("MyPartition");
+        pub_qos << dds::core::policy::Partition("MyPartition");
 
         dds::pub::Publisher publisher(participant, pub_qos);
 
@@ -83,6 +83,8 @@ int main(int argc, char** argv) {
             std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
             writer.write(msg);
+
+            msg.index() = msg.index() + 1;
         }
 
     } catch (const std::exception& e) {

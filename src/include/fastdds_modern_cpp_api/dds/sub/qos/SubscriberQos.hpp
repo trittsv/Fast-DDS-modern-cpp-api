@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fastdds_modern_cpp_api/dds/core/policy/CorePolicy.hpp>
+
 #include <fastdds/dds/subscriber/ReadCondition.hpp>
 #include <fastdds/dds/subscriber/Subscriber.hpp>
 #include <fastdds/dds/subscriber/SampleInfo.hpp>
@@ -19,9 +21,22 @@ namespace dds {
 namespace sub {
 namespace qos {
 
+class SubscriberQos {
 
-using SubscriberQos = eprosima::fastdds::dds::SubscriberQos;
+public:
+    SubscriberQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Partition& rhs) {
+        m_qos.partition().push_back(rhs.m_name.c_str());
+        return *this;
+    }
 
+    operator eprosima::fastdds::dds::SubscriberQos() const {
+        return m_qos;
+    }
+
+private:
+    eprosima::fastdds::dds::SubscriberQos m_qos;
+
+};
 
 }
 }

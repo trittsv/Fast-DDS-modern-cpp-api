@@ -66,7 +66,7 @@ public:
     class Selector {
 
     public:
-        Selector(){}
+        Selector(): m_nativeReader(nullptr) {}
     
         Selector& state(const dds::sub::status::DataState& s) {
             return *this;
@@ -87,10 +87,12 @@ public:
                 auto ret = m_nativeReader->take(samples, sample_infos, max_samples, sample_states, view_states, instance_states);
                 if (ret == eprosima::fastdds::dds::RETCODE_OK) {
                     for (size_t i = 0; i < samples.length(); i++) {
-                        loanedSamples.push_back(fastdds_modern_cpp_api::dds::sub::LoanedSample<T>(
-                            fastdds_modern_cpp_api::dds::sub::SampleInfo(sample_infos[i]),
-                            samples[i]
-                        ));
+                        loanedSamples.push_back(
+                            fastdds_modern_cpp_api::dds::sub::LoanedSample<T>(
+                                fastdds_modern_cpp_api::dds::sub::SampleInfo(sample_infos[i]),
+                                samples[i]
+                            )
+                        );
                     }
                 }
             }

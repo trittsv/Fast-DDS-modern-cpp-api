@@ -67,15 +67,16 @@ int main(int argc, char** argv) {
 
         std::cout << "Create Subscriber..." << std::endl;
         dds::sub::qos::SubscriberQos sub_qos;
+        sub_qos << dds::core::policy::Partition("MyPartition");
         dds::sub::Subscriber subscriber(participant, sub_qos);
 
         std::cout << "Create Reader..." << std::endl;
         dds::sub::qos::DataReaderQos reader_qos;
         reader_qos << dds::core::policy::DatRepresentation(dds::core::policy::DataRepresentationId::XCDR2);
-        /*reader_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
+        reader_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
         reader_qos << dds::core::policy::Reliability(dds::core::policy::ReliabilityKind::RELIABLE, dds::core::Duration::infinite());
         reader_qos << dds::core::policy::Durability(dds::core::policy::DurabilityKind::TRANSIENT_LOCAL);
-        reader_qos << dds::core::policy::History::KeepAll();*/
+        reader_qos << dds::core::policy::History::KeepAll();
         dds::sub::DataReaderListener<HelloWorld>* reader_listener;
         dds::core::status::StatusMask reader_mask;
         auto dataState = dds::sub::status::DataState::any();
@@ -95,7 +96,7 @@ int main(int argc, char** argv) {
                 if (sampleInfo.valid() && instanceState == dds::sub::status::InstanceState::alive()) {
                     HelloWorld const& t = sample.data();
 
-                    std::cout << "[Received] (HelloWorld) index:" << t.index() << ", message: " << t.message() << std::endl;
+                    std::cout << "[Received] (HelloWorld) index: " << t.index() << ", message: " << t.message() << std::endl;
                 } else {
                     std::cout << "[Received] (HelloWorld) INVALID" << std::endl;
                 }
