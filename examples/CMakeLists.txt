@@ -21,3 +21,4 @@ add_executable(subscriber_app subscriber_app.cpp
 target_include_directories(subscriber_app SYSTEM PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/gen)
 target_link_libraries(subscriber_app fastdds fastcdr)
 
+install(TARGETS subscriber_app publisher_app DESTINATION bin)

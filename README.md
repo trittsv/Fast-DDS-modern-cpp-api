@@ -34,8 +34,8 @@ Install FastDDS via installer.
 ```bash
 mkdir build
 cd build
-cmake -DOPENSSL_INCLUDE_DIR="C:\Program Files\OpenSSL-Win64\include" ..
-cmake --build . --config Release
+cmake -DBUILD_EXAMPLES=ON -DOPENSSL_INCLUDE_DIR="C:\Program Files\OpenSSL-Win64\include" -DCMAKE_INSTALL_PREFIX=./install ..
+cmake --build . --config Release --target install
 ```
 
 ## Contributing
