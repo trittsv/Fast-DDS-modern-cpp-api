@@ -137,7 +137,7 @@ public:
     Ownership(const dds::core::policy::OwnershipKind& kind) {
         if (kind == OwnershipKind::SHARED) {
             m_policy.kind = eprosima::fastdds::dds::OwnershipQosPolicyKind::SHARED_OWNERSHIP_QOS;
-        } else if (kind == OwnershipKind::SHARED) {
+        } else if (kind == OwnershipKind::EXCLUSIVE) {
             m_policy.kind = eprosima::fastdds::dds::OwnershipQosPolicyKind::EXCLUSIVE_OWNERSHIP_QOS;
         }
     }
@@ -185,6 +185,7 @@ public:
     operator eprosima::fastdds::dds::HistoryQosPolicy() const {
         return m_policy;
     }
+
 private:
     eprosima::fastdds::dds::HistoryQosPolicy m_policy;
 };

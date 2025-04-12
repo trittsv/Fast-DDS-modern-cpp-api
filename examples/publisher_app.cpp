@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
         dds::pub::Publisher publisher(participant, pub_qos);
 
-        LOG << "Create Writer...";;
+        LOG << "Create Writer...";
         dds::pub::qos::DataWriterQos writer_qos = publisher.default_datawriter_qos();
         writer_qos << dds::core::policy::DatRepresentation(dds::core::policy::DataRepresentationId::XCDR2);
         writer_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
@@ -55,7 +55,7 @@ int main(int argc, char** argv) {
 
         dds::pub::DataWriter<HelloWorld> writer(publisher, topic, writer_qos, writer_listener, writer_mask);
 
-        LOG << "Write msg...";;
+        LOG << "Write msg...";
         HelloWorld msg;
         msg.index() = 1;
         msg.message() = "Hello im here!";

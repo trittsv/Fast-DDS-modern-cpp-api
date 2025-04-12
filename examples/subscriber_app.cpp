@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
         reader_qos << dds::core::policy::Reliability(dds::core::policy::ReliabilityKind::RELIABLE, dds::core::Duration::infinite());
         reader_qos << dds::core::policy::Durability(dds::core::policy::DurabilityKind::TRANSIENT_LOCAL);
         reader_qos << dds::core::policy::History::KeepAll();
+
         dds::sub::DataReaderListener<HelloWorld>* reader_listener;
         dds::core::status::StatusMask reader_mask;
         auto dataState = dds::sub::status::DataState::any();
