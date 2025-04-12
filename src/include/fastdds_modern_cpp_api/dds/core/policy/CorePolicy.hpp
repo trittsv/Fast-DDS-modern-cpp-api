@@ -77,15 +77,16 @@ enum class ReliabilityKind {
 class Reliability {
 
 public:
-    Reliability(const fastdds_modern_cpp_api::dds::core::policy::ReliabilityKind& kind, const fastdds_modern_cpp_api::dds::core::Duration& max_blocking_time) {
+    Reliability(const fastdds_modern_cpp_api::dds::core::policy::ReliabilityKind& kind, const fastdds_modern_cpp_api::dds::core::Duration& max_blocking_time = dds::core::Duration(0, 100000000)) {
 
         if (kind == ReliabilityKind::BEST_EFFORT) {
             m_policy.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::BEST_EFFORT_RELIABILITY_QOS;
         } else if (kind == ReliabilityKind::RELIABLE) {
             m_policy.kind = eprosima::fastdds::dds::ReliabilityQosPolicyKind::RELIABLE_RELIABILITY_QOS;
+            m_policy.max_blocking_time = eprosima::fastdds::dds::Duration_t(max_blocking_time.sec, max_blocking_time.nsec);
         }
 
-        m_policy.max_blocking_time = eprosima::fastdds::dds::Duration_t(max_blocking_time.sec, max_blocking_time.nsec);
+        
     }
     operator eprosima::fastdds::dds::ReliabilityQosPolicy() const {
         return m_policy;
