@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
                 if (sampleInfo.valid() && instanceStateSample == dds::sub::status::InstanceState::alive()) {
                     const HelloWorld& t = sample.data();
 
-                    LOG << "[Received] (HelloWorld) index: " << std::to_string(t.index()) << ", message: " << t.message();
+                    LOG << "[Received] (HelloWorld) keyId: " <<  t.keyId() << ", index: " << std::to_string(t.index()) << ", message: " << t.message();
                 } else {
                     LOG << "[Received] (HelloWorld) INVALID";
                 }

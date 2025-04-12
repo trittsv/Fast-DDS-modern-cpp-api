@@ -1,6 +1,9 @@
-@extensibility(APPENDABLE)
+
+
+@extensibility(MUTABLE)
 struct HelloWorld
 {
+	@key string keyId;
 	unsigned long index;
 	string message;
 };

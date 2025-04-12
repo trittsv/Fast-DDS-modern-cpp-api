@@ -49,7 +49,7 @@ void register_HelloWorld_type_identifier(
         "HelloWorld", type_ids_HelloWorld);
     if (eprosima::fastdds::dds::RETCODE_OK != return_code_HelloWorld)
     {
-        StructTypeFlag struct_flags_HelloWorld = TypeObjectUtils::build_struct_type_flag(eprosima::fastdds::dds::xtypes::ExtensibilityKind::APPENDABLE,
+        StructTypeFlag struct_flags_HelloWorld = TypeObjectUtils::build_struct_type_flag(eprosima::fastdds::dds::xtypes::ExtensibilityKind::MUTABLE,
                 false, false);
         QualifiedTypeName type_name_HelloWorld = "HelloWorld";
         eprosima::fastcdr::optional<AppliedBuiltinTypeAnnotations> type_ann_builtin_HelloWorld;
@@ -66,6 +66,57 @@ void register_HelloWorld_type_identifier(
         header_HelloWorld = TypeObjectUtils::build_complete_struct_header(TypeIdentifier(), detail_HelloWorld);
         CompleteStructMemberSeq member_seq_HelloWorld;
         {
+            TypeIdentifierPair type_ids_keyId;
+            ReturnCode_t return_code_keyId {eprosima::fastdds::dds::RETCODE_OK};
+            return_code_keyId =
+                eprosima::fastdds::dds::DomainParticipantFactory::get_instance()->type_object_registry().get_type_identifiers(
+                "anonymous_string_unbounded", type_ids_keyId);
+
+            if (eprosima::fastdds::dds::RETCODE_OK != return_code_keyId)
+            {
+                {
+                    SBound bound = 0;
+                    StringSTypeDefn string_sdefn = TypeObjectUtils::build_string_s_type_defn(bound);
+                    if (eprosima::fastdds::dds::RETCODE_BAD_PARAMETER ==
+                            TypeObjectUtils::build_and_register_s_string_type_identifier(string_sdefn,
+                            "anonymous_string_unbounded", type_ids_keyId))
+                    {
+                        EPROSIMA_LOG_ERROR(XTYPES_TYPE_REPRESENTATION,
+                            "anonymous_string_unbounded already registered in TypeObjectRegistry for a different type.");
+                    }
+                }
+            }
+            StructMemberFlag member_flags_keyId = TypeObjectUtils::build_struct_member_flag(eprosima::fastdds::dds::xtypes::TryConstructFailAction::DISCARD,
+                    false, false, true, false);
+            MemberId member_id_keyId = 0x00000000;
+            bool common_keyId_ec {false};
+            CommonStructMember common_keyId {TypeObjectUtils::build_common_struct_member(member_id_keyId, member_flags_keyId, TypeObjectUtils::retrieve_complete_type_identifier(type_ids_keyId, common_keyId_ec))};
+            if (!common_keyId_ec)
+            {
+                EPROSIMA_LOG_ERROR(XTYPES_TYPE_REPRESENTATION, "Structure keyId member TypeIdentifier inconsistent.");
+                return;
+            }
+            MemberName name_keyId = "keyId";
+            eprosima::fastcdr::optional<AppliedBuiltinMemberAnnotations> member_ann_builtin_keyId;
+            ann_custom_HelloWorld.reset();
+            AppliedAnnotationSeq tmp_ann_custom_keyId;
+            eprosima::fastcdr::optional<std::string> unit_keyId;
+            eprosima::fastcdr::optional<AnnotationParameterValue> min_keyId;
+            eprosima::fastcdr::optional<AnnotationParameterValue> max_keyId;
+            eprosima::fastcdr::optional<std::string> hash_id_keyId;
+            if (unit_keyId.has_value() || min_keyId.has_value() || max_keyId.has_value() || hash_id_keyId.has_value())
+            {
+                member_ann_builtin_keyId = TypeObjectUtils::build_applied_builtin_member_annotations(unit_keyId, min_keyId, max_keyId, hash_id_keyId);
+            }
+            if (!tmp_ann_custom_keyId.empty())
+            {
+                ann_custom_HelloWorld = tmp_ann_custom_keyId;
+            }
+            CompleteMemberDetail detail_keyId = TypeObjectUtils::build_complete_member_detail(name_keyId, member_ann_builtin_keyId, ann_custom_HelloWorld);
+            CompleteStructMember member_keyId = TypeObjectUtils::build_complete_struct_member(common_keyId, detail_keyId);
+            TypeObjectUtils::add_complete_struct_member(member_seq_HelloWorld, member_keyId);
+        }
+        {
             TypeIdentifierPair type_ids_index;
             ReturnCode_t return_code_index {eprosima::fastdds::dds::RETCODE_OK};
             return_code_index =
@@ -80,7 +131,7 @@ void register_HelloWorld_type_identifier(
             }
             StructMemberFlag member_flags_index = TypeObjectUtils::build_struct_member_flag(eprosima::fastdds::dds::xtypes::TryConstructFailAction::DISCARD,
                     false, false, false, false);
-            MemberId member_id_index = 0x00000000;
+            MemberId member_id_index = 0x00000001;
             bool common_index_ec {false};
             CommonStructMember common_index {TypeObjectUtils::build_common_struct_member(member_id_index, member_flags_index, TypeObjectUtils::retrieve_complete_type_identifier(type_ids_index, common_index_ec))};
             if (!common_index_ec)
@@ -118,7 +169,7 @@ void register_HelloWorld_type_identifier(
             }
             StructMemberFlag member_flags_message = TypeObjectUtils::build_struct_member_flag(eprosima::fastdds::dds::xtypes::TryConstructFailAction::DISCARD,
                     false, false, false, false);
-            MemberId member_id_message = 0x00000001;
+            MemberId member_id_message = 0x00000002;
             bool common_message_ec {false};
             CommonStructMember common_message {TypeObjectUtils::build_common_struct_member(member_id_message, member_flags_message, TypeObjectUtils::retrieve_complete_type_identifier(type_ids_message, common_message_ec))};
             if (!common_message_ec)

@@ -37,7 +37,7 @@ HelloWorldPubSubType::HelloWorldPubSubType()
     uint32_t type_size = HelloWorld_max_cdr_typesize;
     type_size += static_cast<uint32_t>(eprosima::fastcdr::Cdr::alignment(type_size, 4)); /* possible submessage alignment */
     max_serialized_type_size = type_size + 4; /*encapsulation*/
-    is_compute_key_provided = false;
+    is_compute_key_provided = true;
     uint32_t key_length = HelloWorld_max_key_cdr_typesize > 16 ? HelloWorld_max_key_cdr_typesize : 16;
     key_buffer_ = reinterpret_cast<unsigned char*>(malloc(key_length));
     memset(key_buffer_, 0, key_length);
@@ -67,8 +67,8 @@ bool HelloWorldPubSubType::serialize(
     payload.encapsulation = ser.endianness() == eprosima::fastcdr::Cdr::BIG_ENDIANNESS ? CDR_BE : CDR_LE;
     ser.set_encoding_flag(
         data_representation == DataRepresentationId_t::XCDR_DATA_REPRESENTATION ?
-        eprosima::fastcdr::EncodingAlgorithmFlag::PLAIN_CDR  :
-        eprosima::fastcdr::EncodingAlgorithmFlag::DELIMIT_CDR2);
+        eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR :
+        eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR2);
 
     try
     {

@@ -57,6 +57,7 @@ int main(int argc, char** argv) {
 
         LOG << "Write msg...";
         HelloWorld msg;
+        msg.keyId() = "Key1";
         msg.index() = 1;
         msg.message() = "Hello im here!";
 
