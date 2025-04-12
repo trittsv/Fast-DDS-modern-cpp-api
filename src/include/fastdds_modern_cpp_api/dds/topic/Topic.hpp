@@ -2,9 +2,9 @@
 
 #include <fastdds_modern_cpp_api/dds/domain/DomainParticipant.hpp>
 #include <fastdds_modern_cpp_api/dds/core/status/Status.hpp>
+#include <fastdds_modern_cpp_api/dds/topic/qos/TopicQos.hpp>
 
 #include <fastdds/dds/topic/Topic.hpp>
-#include <fastdds/dds/topic/qos/TopicQos.hpp>
 #include <fastdds/dds/topic/TypeSupport.hpp>
 
 #ifdef _MSC_VER
@@ -17,36 +17,6 @@
 namespace fastdds_modern_cpp_api {
 namespace dds {
 namespace topic {
-namespace qos {
-
-class TopicQos {
-
-public:
-    TopicQos& operator<<(const eprosima::fastdds::dds::OwnershipQosPolicy& rhs) {
-        nativeQos.ownership(rhs);
-        return *this;
-    }
-    TopicQos& operator<<(const eprosima::fastdds::dds::DurabilityQosPolicy& rhs) {
-        nativeQos.durability(rhs);
-        return *this;
-    }
-    TopicQos& operator<<(const eprosima::fastdds::dds::ReliabilityQosPolicy& rhs) {
-        nativeQos.reliability(rhs);
-        return *this;
-    }
-    TopicQos& operator<<(const eprosima::fastdds::dds::HistoryQosPolicy& rhs) {
-        nativeQos.history(rhs);
-        return *this;
-    }
-    operator eprosima::fastdds::dds::TopicQos() const {
-        return nativeQos;
-    }
-
-    eprosima::fastdds::dds::TopicQos nativeQos;
-};
-
-}
-
 
 template <typename T>
 class TopicListener;

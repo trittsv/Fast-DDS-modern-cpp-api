@@ -21,6 +21,7 @@
 #include <fastdds_modern_cpp_api/dds/sub/Subscriber.hpp>
 #include <fastdds_modern_cpp_api/dds/sub/SubscriberListener.hpp>
 #include <fastdds_modern_cpp_api/dds/topic/Topic.hpp>
+#include <fastdds_modern_cpp_api/dds/topic/qos/TopicQos.hpp>
 #include <fastdds_modern_cpp_api/dds/domain/DomainParticipant.hpp>
 
 

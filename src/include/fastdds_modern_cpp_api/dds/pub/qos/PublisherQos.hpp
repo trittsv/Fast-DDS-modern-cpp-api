@@ -29,9 +29,22 @@ namespace qos {
 class PublisherQos {
 
 public:
+
+    PublisherQos() : m_qos(/*eprosima::fastdds::dds::PUBLISHER_QOS_DEFAULT*/) {
+            
+    }
+
+    PublisherQos(eprosima::fastdds::dds::PublisherQos qos) : m_qos(qos) {
+        
+    }
+
     PublisherQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Partition& rhs) {
         m_qos.partition().push_back(rhs.m_name.c_str());
         return *this;
+    }
+
+    operator eprosima::fastdds::dds::PublisherQos() const {
+        return m_qos;
     }
 
     eprosima::fastdds::dds::PublisherQos m_qos;
@@ -41,4 +54,4 @@ public:
 } // namespace qos
 } // namespace pub
 } // namespace dds
-}
+} // fastdds_modern_cpp_api

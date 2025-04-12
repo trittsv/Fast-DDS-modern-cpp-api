@@ -37,7 +37,7 @@ public:
         return !(*this == other);
     }
 
-    operator eprosima::fastdds::dds::InstanceStateMask() const {
+    operator eprosima::fastdds::dds::InstanceStateMask&() {
         return m_instance_states;
     }
 
@@ -52,7 +52,7 @@ public:
     ViewState(){}
     ViewState(eprosima::fastdds::dds::ViewStateMask view_states) : m_view_states(view_states) {}
 
-    operator eprosima::fastdds::dds::ViewStateMask() const {
+    operator eprosima::fastdds::dds::ViewStateMask&() {
         return m_view_states;
     }
 
@@ -66,7 +66,7 @@ public:
     SampleState(){}
     SampleState(eprosima::fastdds::dds::SampleStateMask sample_states) : m_sampleStates(sample_states) {}
 
-    operator eprosima::fastdds::dds::SampleStateMask() const {
+    operator eprosima::fastdds::dds::SampleStateMask&() {
         return m_sampleStates;
     }
 

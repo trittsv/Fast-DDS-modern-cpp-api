@@ -25,6 +25,14 @@ namespace qos {
 class DataReaderQos {
 
 public:
+    DataReaderQos() {
+        
+    }
+
+    DataReaderQos(eprosima::fastdds::dds::DataReaderQos qos) : m_qos(qos) {
+        
+    }
+
     DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Ownership& rhs) {
         m_qos.ownership(rhs);
         return *this;
@@ -50,8 +58,10 @@ public:
     operator eprosima::fastdds::dds::DataReaderQos() const {
         return m_qos;
     }
+
 private:
     eprosima::fastdds::dds::DataReaderQos m_qos;
+
 };
 
 

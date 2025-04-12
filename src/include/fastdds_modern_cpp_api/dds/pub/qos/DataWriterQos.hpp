@@ -30,6 +30,14 @@ namespace qos {
 class DataWriterQos {
 
 public:
+    DataWriterQos() {
+            
+    }
+
+    DataWriterQos(eprosima::fastdds::dds::DataWriterQos qos) : m_qos(qos) {
+        
+    }
+
     DataWriterQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::Ownership& rhs) {
         m_qos.ownership(rhs);
         return *this;

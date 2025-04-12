@@ -27,8 +27,7 @@ class Subscriber {
 
 public:
     Subscriber(){}
-    Subscriber(const dds::domain::DomainParticipant& dp, const dds::sub::qos::SubscriberQos& qos) {
-
+    Subscriber(const dds::domain::DomainParticipant& dp, const dds::sub::qos::SubscriberQos& qos)  {
         m_subscriber = dp.get_participant()->create_subscriber(qos);
         if (m_subscriber == nullptr) {
             throw std::runtime_error("Subscriber initialization failed");
@@ -36,6 +35,14 @@ public:
 
     }
 
+    dds::sub::qos::DataReaderQos default_datareader_qos() const {
+        eprosima::fastdds::dds::DataReaderQos qos = eprosima::fastdds::dds::DATAREADER_QOS_DEFAULT;
+        auto ret = m_subscriber->get_default_datareader_qos(qos);
+        if (ret != 0) {
+            throw std::runtime_error("Failed to get_default_datareader_qos " + std::to_string(ret));
+        }
+        return dds::sub::qos::DataReaderQos(qos);
+    }
 
     eprosima::fastdds::dds::Subscriber* m_subscriber;
 };

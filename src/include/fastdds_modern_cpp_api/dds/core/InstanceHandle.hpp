@@ -19,7 +19,7 @@ public:
     bool is_nil() {
         return false;
     }
-    operator eprosima::fastdds::dds::InstanceHandle_t() const {
+    operator eprosima::fastdds::dds::InstanceHandle_t&() {
         return m_handle;
     }
 

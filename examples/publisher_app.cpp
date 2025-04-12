@@ -24,26 +24,26 @@ int main(int argc, char** argv) {
 
     try {
         LOG << "Create Participant...";
-        dds::domain::qos::DomainParticipantQos participant_qos;
+        dds::domain::qos::DomainParticipantQos participant_qos = dds::domain::DomainParticipant::default_participant_qos();
         dds::domain::DomainParticipant participant(0, participant_qos);
 
         participant.register_type<HelloWorldPubSubType>(); // TODO: find a way to wrap this.
 
         LOG << "Create topic...";
-        dds::topic::qos::TopicQos qos;
+        dds::topic::qos::TopicQos qos = participant.default_topic_qos();
         dds::topic::TopicListener<HelloWorld>* listener;
         dds::core::status::StatusMask mask;
         
         dds::topic::Topic<HelloWorld> topic(participant, "HelloWorldTopic", qos, listener, mask);
 
-        LOG << "Create Publisher...";;
-        dds::pub::qos::PublisherQos pub_qos;
+        LOG << "Create Publisher...";
+        dds::pub::qos::PublisherQos pub_qos = participant.default_publisher_qos();
         pub_qos << dds::core::policy::Partition("MyPartition");
 
         dds::pub::Publisher publisher(participant, pub_qos);
 
         LOG << "Create Writer...";;
-        dds::pub::qos::DataWriterQos writer_qos;
+        dds::pub::qos::DataWriterQos writer_qos = publisher.default_datawriter_qos();
         writer_qos << dds::core::policy::DatRepresentation(dds::core::policy::DataRepresentationId::XCDR2);
         writer_qos << dds::core::policy::Ownership(dds::core::policy::OwnershipKind::SHARED);
         writer_qos << dds::core::policy::Reliability(dds::core::policy::ReliabilityKind::RELIABLE, dds::core::Duration::infinite());
