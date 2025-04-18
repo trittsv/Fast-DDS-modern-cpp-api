@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
         std::function<void()> callback = [&reader, &dataState]() {
             LOG << "Received samples ...";
 
-            dds::sub::LoanedSamples<HelloWorld> samples = reader.select(dataState).take();
+            dds::sub::LoanedSamples<HelloWorld> samples = reader.select().state(m_dataState).take();
             for (auto sample : samples) {
                 dds::sub::SampleInfo sampleInfo = sample.info();
                 dds::sub::status::DataState dataStateSample = sampleInfo.state();
