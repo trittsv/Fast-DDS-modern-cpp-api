@@ -29,6 +29,14 @@ public:
         return InstanceState(eprosima::fastdds::dds::InstanceStateKind::ALIVE_INSTANCE_STATE);
     }
 
+    static InstanceState not_alive_disposed() {
+        return InstanceState(eprosima::fastdds::dds::InstanceStateKind::NOT_ALIVE_DISPOSED_INSTANCE_STATE);
+    }
+
+    static InstanceState not_alive_no_writers() {
+        return InstanceState(eprosima::fastdds::dds::InstanceStateKind::NOT_ALIVE_NO_WRITERS_INSTANCE_STATE);
+    }
+
     bool operator==(const InstanceState& other) const {
         return m_instance_states == other.m_instance_states;
     }
