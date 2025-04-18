@@ -157,9 +157,10 @@ public:
     class Selector {
 
     public:
-        Selector(eprosima::fastdds::dds::DataReader* nativeReader, const dds::sub::status::DataState& dataSate): m_nativeReader(nativeReader), m_dataState(dataSate) {}
+        Selector(eprosima::fastdds::dds::DataReader* nativeReader): m_nativeReader(nativeReader) {}
     
-        Selector& state(const dds::sub::status::DataState& s) {
+        Selector& state(const dds::sub::status::DataState& dataState) {
+            m_dataState = dataState;
             return *this;
         }
 
@@ -211,8 +212,8 @@ public:
 
     }
 
-    Selector select(dds::sub::status::DataState dataSate) {
-        return Selector(nativeReader, dataSate);
+    Selector select() {
+        return Selector(nativeReader);
     }
 
     eprosima::fastdds::dds::DataReader* getReader() {

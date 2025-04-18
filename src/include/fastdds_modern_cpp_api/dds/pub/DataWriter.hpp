@@ -49,20 +49,26 @@ public:
     void write(const T& sample) {
         auto ret = nativewriter->write(&sample);
         if (ret != 0) {
-            throw std::runtime_error("DataWriter failde to write, return code: " + std::to_string(ret));
+            throw std::runtime_error("DataWriter failed to write, return code: " + std::to_string(ret));
         }
     }
 
     dds::core::InstanceHandle lookup_instance(const T& key) const {
-        return dds::core::InstanceHandle();
+        return dds::core::InstanceHandle((void*)&key);
     }
 
-    void dispose_instance(const dds::core::InstanceHandle& handle){
-        nativewriter->dispose(const void* const data, const eprosima::fastdds::rtps::InstanceHandle_t& handle);
+    void dispose_instance(dds::core::InstanceHandle& handle){
+        auto ret = nativewriter->dispose(handle.get_data(), handle);
+        if (ret != 0) {
+            throw std::runtime_error("DataWriter failed to unregister_instance, return code: " + std::to_string(ret));
+        }
     }
 
-    void unregister_instance(const dds::core::InstanceHandle& handle) {
-        nativewriter->unregister_instance(const void* const instance, const eprosima::fastdds::rtps::InstanceHandle_t& handle);
+    void unregister_instance(dds::core::InstanceHandle& handle) {
+        auto ret = nativewriter->unregister_instance(handle.get_data(), handle);
+        if (ret != 0) {
+            throw std::runtime_error("DataWriter failed to unregister_instance, return code: " + std::to_string(ret));
+        }
     }
 
     void close() {

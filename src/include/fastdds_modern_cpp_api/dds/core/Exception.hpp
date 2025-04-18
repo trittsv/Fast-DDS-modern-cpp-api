@@ -8,6 +8,11 @@ namespace fastdds_modern_cpp_api {
 namespace dds {
 namespace core {
 
+class NullType {
+
+};
+
+constexpr NullType null = NullType{};
 
 using Exception = eprosima::fastdds::dds::xtypes::Exception;
 using InvalidArgumentError = eprosima::fastdds::dds::xtypes::InvalidArgumentError;

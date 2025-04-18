@@ -13,13 +13,14 @@ namespace core {
 class InstanceHandle {
 public:
     InstanceHandle(){}
+    InstanceHandle(void* data) : m_data(data) {}
     InstanceHandle(const eprosima::fastdds::dds::InstanceHandle_t& handle) : m_handle(handle) {
 
     }
     bool is_nil() {
-        return false;
+        return !m_handle.isDefined();
     }
-    operator eprosima::fastdds::dds::InstanceHandle_t&() {
+    operator const eprosima::fastdds::dds::InstanceHandle_t&() {
         return m_handle;
     }
 
@@ -34,10 +35,15 @@ public:
         return os;
     }
 
+    void* get_data() const {
+        return m_data;
+    }
+
 
 
 private:
     eprosima::fastdds::dds::InstanceHandle_t m_handle;
+    void* m_data;
 };
 
 

@@ -18,15 +18,25 @@ namespace cond {
 class WaitSet {
 
 public:
-    WaitSet& operator+=(fastdds_modern_cpp_api::dds::sub::cond::ReadCondition& rhs) {
+    WaitSet& operator+=(const fastdds_modern_cpp_api::dds::sub::cond::ReadCondition& rhs) {
         m_waitset.attach_condition(*rhs.m_readCondition);
         m_handlers[rhs.m_readCondition] = &rhs;
         return *this;
     }
 
-    WaitSet& operator-=(fastdds_modern_cpp_api::dds::sub::cond::ReadCondition& rhs) {
+    WaitSet& operator-=(const fastdds_modern_cpp_api::dds::sub::cond::ReadCondition& rhs) {
         m_waitset.detach_condition(*rhs.m_readCondition);
         m_handlers.erase(rhs.m_readCondition);
+        return *this;
+    }
+
+    WaitSet& operator+=(fastdds_modern_cpp_api::dds::core::cond::GuardCondition& rhs) {
+        m_waitset.attach_condition(rhs.m_guardCondition);
+        return *this;
+    }
+
+    WaitSet& operator-=(fastdds_modern_cpp_api::dds::core::cond::GuardCondition& rhs) {
+        m_waitset.detach_condition(rhs.m_guardCondition);
         return *this;
     }
 
@@ -67,7 +77,7 @@ public:
 
 private:
     eprosima::fastdds::dds::WaitSet m_waitset;
-    std::unordered_map<eprosima::fastdds::dds::Condition*, fastdds_modern_cpp_api::dds::sub::cond::ReadCondition*> m_handlers;
+    std::unordered_map<eprosima::fastdds::dds::Condition*, const fastdds_modern_cpp_api::dds::sub::cond::ReadCondition*> m_handlers;
 };
 
 }
