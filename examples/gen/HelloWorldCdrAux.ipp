@@ -45,15 +45,18 @@ eProsima_user_DllExport size_t calculate_serialized_size(
     eprosima::fastcdr::EncodingAlgorithmFlag previous_encoding = calculator.get_encoding();
     size_t calculated_size {calculator.begin_calculate_type_serialized_size(
                                 eprosima::fastcdr::CdrVersion::XCDRv2 == calculator.get_cdr_version() ?
-                                eprosima::fastcdr::EncodingAlgorithmFlag::DELIMIT_CDR2 :
-                                eprosima::fastcdr::EncodingAlgorithmFlag::PLAIN_CDR,
+                                eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR2 :
+                                eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR,
                                 current_alignment)};
 
 
-        calculated_size += calculator.calculate_member_serialized_size(eprosima::fastcdr::MemberId(0),
+        calculated_size += calculator.calculate_member_serialized_size(eprosima::fastcdr::MemberId(0x00000000),
+                data.keyId(), current_alignment);
+
+        calculated_size += calculator.calculate_member_serialized_size(eprosima::fastcdr::MemberId(0x00000001),
                 data.index(), current_alignment);
 
-        calculated_size += calculator.calculate_member_serialized_size(eprosima::fastcdr::MemberId(1),
+        calculated_size += calculator.calculate_member_serialized_size(eprosima::fastcdr::MemberId(0x00000002),
                 data.message(), current_alignment);
 
 
@@ -70,12 +73,13 @@ eProsima_user_DllExport void serialize(
     eprosima::fastcdr::Cdr::state current_state(scdr);
     scdr.begin_serialize_type(current_state,
             eprosima::fastcdr::CdrVersion::XCDRv2 == scdr.get_cdr_version() ?
-            eprosima::fastcdr::EncodingAlgorithmFlag::DELIMIT_CDR2 :
-            eprosima::fastcdr::EncodingAlgorithmFlag::PLAIN_CDR);
+            eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR2 :
+            eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR);
 
     scdr
-        << eprosima::fastcdr::MemberId(0) << data.index()
-        << eprosima::fastcdr::MemberId(1) << data.message()
+        << eprosima::fastcdr::MemberId(0x00000000) << data.keyId()
+        << eprosima::fastcdr::MemberId(0x00000001) << data.index()
+        << eprosima::fastcdr::MemberId(0x00000002) << data.message()
 ;
     scdr.end_serialize_type(current_state);
 }
@@ -86,18 +90,22 @@ eProsima_user_DllExport void deserialize(
         HelloWorld& data)
 {
     cdr.deserialize_type(eprosima::fastcdr::CdrVersion::XCDRv2 == cdr.get_cdr_version() ?
-            eprosima::fastcdr::EncodingAlgorithmFlag::DELIMIT_CDR2 :
-            eprosima::fastcdr::EncodingAlgorithmFlag::PLAIN_CDR,
+            eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR2 :
+            eprosima::fastcdr::EncodingAlgorithmFlag::PL_CDR,
             [&data](eprosima::fastcdr::Cdr& dcdr, const eprosima::fastcdr::MemberId& mid) -> bool
             {
                 bool ret_value = true;
                 switch (mid.id)
                 {
-                                        case 0:
+                                        case 0x00000000:
+                                                dcdr >> data.keyId();
+                                            break;
+
+                                        case 0x00000001:
                                                 dcdr >> data.index();
                                             break;
 
-                                        case 1:
+                                        case 0x00000002:
                                                 dcdr >> data.message();
                                             break;
 
@@ -116,9 +124,9 @@ void serialize_key(
 
     static_cast<void>(scdr);
     static_cast<void>(data);
-                        scdr << data.index();
+                        scdr << data.keyId();
 
-                        scdr << data.message();
+
 
 }
 

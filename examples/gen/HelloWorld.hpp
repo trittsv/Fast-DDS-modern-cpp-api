@@ -80,6 +80,8 @@ public:
     eProsima_user_DllExport HelloWorld(
             const HelloWorld& x)
     {
+                    m_keyId = x.m_keyId;
+
                     m_index = x.m_index;
 
                     m_message = x.m_message;
@@ -93,6 +95,7 @@ public:
     eProsima_user_DllExport HelloWorld(
             HelloWorld&& x) noexcept
     {
+        m_keyId = std::move(x.m_keyId);
         m_index = x.m_index;
         m_message = std::move(x.m_message);
     }
@@ -104,6 +107,8 @@ public:
     eProsima_user_DllExport HelloWorld& operator =(
             const HelloWorld& x)
     {
+
+                    m_keyId = x.m_keyId;
 
                     m_index = x.m_index;
 
@@ -120,6 +125,7 @@ public:
             HelloWorld&& x) noexcept
     {
 
+        m_keyId = std::move(x.m_keyId);
         m_index = x.m_index;
         m_message = std::move(x.m_message);
         return *this;
@@ -132,7 +138,8 @@ public:
     eProsima_user_DllExport bool operator ==(
             const HelloWorld& x) const
     {
-        return (m_index == x.m_index &&
+        return (m_keyId == x.m_keyId &&
+           m_index == x.m_index &&
            m_message == x.m_message);
     }
 
@@ -145,6 +152,45 @@ public:
     {
         return !(*this == x);
     }
+
+    /*!
+     * @brief This function copies the value in member keyId
+     * @param _keyId New value to be copied in member keyId
+     */
+    eProsima_user_DllExport void keyId(
+            const std::string& _keyId)
+    {
+        m_keyId = _keyId;
+    }
+
+    /*!
+     * @brief This function moves the value in member keyId
+     * @param _keyId New value to be moved in member keyId
+     */
+    eProsima_user_DllExport void keyId(
+            std::string&& _keyId)
+    {
+        m_keyId = std::move(_keyId);
+    }
+
+    /*!
+     * @brief This function returns a constant reference to member keyId
+     * @return Constant reference to member keyId
+     */
+    eProsima_user_DllExport const std::string& keyId() const
+    {
+        return m_keyId;
+    }
+
+    /*!
+     * @brief This function returns a reference to member keyId
+     * @return Reference to member keyId
+     */
+    eProsima_user_DllExport std::string& keyId()
+    {
+        return m_keyId;
+    }
+
 
     /*!
      * @brief This function sets a value in member index
@@ -217,6 +263,7 @@ public:
 
 private:
 
+    std::string m_keyId;
     uint32_t m_index{0};
     std::string m_message;
 
