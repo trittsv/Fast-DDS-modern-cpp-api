@@ -2,6 +2,7 @@
 
 #include <fastdds_modern_cpp_api/dds/domain/DomainParticipant.hpp>
 #include <fastdds_modern_cpp_api/dds/core/status/Status.hpp>
+#include <fastdds_modern_cpp_api/dds/core/Exception.hpp>
 #include <fastdds_modern_cpp_api/dds/topic/qos/TopicQos.hpp>
 
 #include <fastdds/dds/topic/Topic.hpp>
@@ -55,6 +56,10 @@ template <typename T>
 class Topic {
 
 public:
+    Topic(dds::core::NullType null) {
+
+    }
+
     Topic(const dds::domain::DomainParticipant& dp,
             const std::string& name,
             const dds::topic::qos::TopicQos& qos,
@@ -69,6 +74,10 @@ public:
 
     eprosima::fastdds::dds::Topic* get_topic() const {
         return nativeTopic;
+    }
+
+    bool operator==(const dds::core::NullType&) const {
+        return nativeTopic == nullptr;
     }
 
 private:
