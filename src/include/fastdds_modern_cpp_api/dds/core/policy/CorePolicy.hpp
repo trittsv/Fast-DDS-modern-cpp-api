@@ -31,6 +31,39 @@ namespace dds {
 namespace core {
 namespace policy {
 
+enum class TypeConsistencyKind {
+    DISALLOW_TYPE_COERCION = 0,
+    ALLOW_TYPE_COERCION = 1
+};
+
+class TypeConsistencyEnforcement {
+
+public:
+    TypeConsistencyEnforcement(
+        const TypeConsistencyKind& consistencyKind, bool ignore_sequence_bounds, bool ignore_string_bounds,
+        bool ignore_member_names, bool prevent_type_widening, bool force_type_validation) {
+
+        if (consistencyKind == TypeConsistencyKind::DISALLOW_TYPE_COERCION) {
+            m_policy.m_kind = eprosima::fastdds::dds::TypeConsistencyKind::DISALLOW_TYPE_COERCION;
+        } else if (consistencyKind == TypeConsistencyKind::ALLOW_TYPE_COERCION) {
+            m_policy.m_kind = eprosima::fastdds::dds::TypeConsistencyKind::ALLOW_TYPE_COERCION;;
+        }
+        
+        m_policy.m_ignore_sequence_bounds = ignore_sequence_bounds;
+        m_policy.m_ignore_string_bounds = ignore_string_bounds;
+        m_policy.m_ignore_member_names = ignore_member_names;
+        m_policy.m_prevent_type_widening = prevent_type_widening;
+        m_policy.m_force_type_validation = force_type_validation;
+    }
+
+    operator eprosima::fastdds::dds::TypeConsistencyEnforcementQosPolicy() const {
+        return m_policy;
+    }
+
+private:
+    eprosima::fastdds::dds::TypeConsistencyEnforcementQosPolicy m_policy;
+};
+
 class Partition {
 
 public:
@@ -47,10 +80,10 @@ enum class DataRepresentationId {
     XCDR2 = 2 
 };
 
-class DatRepresentation {
+class DataRepresentation {
 
 public:
-    DatRepresentation(const DataRepresentationId& kind) {
+    DataRepresentation(const DataRepresentationId& kind) {
         if (kind == DataRepresentationId::XCDR1) {
             m_policy.m_value.push_back(eprosima::fastdds::dds::DataRepresentationId_t::XCDR_DATA_REPRESENTATION);
         } else if(kind == DataRepresentationId::XML) {
