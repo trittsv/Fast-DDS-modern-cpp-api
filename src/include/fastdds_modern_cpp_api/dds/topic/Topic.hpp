@@ -60,6 +60,10 @@ public:
 
     }
 
+    Topic(eprosima::fastdds::dds::Topic* topic): nativeTopic(topic) {
+
+    }
+
     Topic(const dds::domain::DomainParticipant& dp,
             const std::string& name,
             const dds::topic::qos::TopicQos& qos,
