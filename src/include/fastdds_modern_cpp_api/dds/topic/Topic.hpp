@@ -56,7 +56,7 @@ template <typename T>
 class Topic {
 
 public:
-    Topic(dds::core::NullType null) {
+    Topic(dds::core::NullType null): nativeTopic(nullptr) {
 
     }
 
@@ -80,10 +80,27 @@ public:
         return nativeTopic == nullptr;
     }
 
+    Topic<T>& operator=(Topic<T>& other) {
+        if (this != &other) {
+            nativeTopic = other.nativeTopic;
+        }
+        return *this;
+    }
+
 private:
     eprosima::fastdds::dds::Topic* nativeTopic;
 
 };
+
+template<typename T>
+inline T find(const dds::domain::DomainParticipant& dp, const std::string& topicName) {
+    auto* foundTopic = dp.get_participant()->find_topic(topicName, eprosima::fastdds::dds::Duration_t(1, 0));
+    if (foundTopic == nullptr) {
+        return T(dds::core::NullType());
+    } else {
+        return T(foundTopic);
+    }
+}
 
 template <typename T>
 class TopicListener {
