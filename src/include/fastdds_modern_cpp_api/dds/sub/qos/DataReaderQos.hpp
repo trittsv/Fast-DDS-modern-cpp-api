@@ -50,8 +50,13 @@ public:
         return *this;
     }
 
-    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DatRepresentation& rhs) {
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DataRepresentation& rhs) {
         m_qos.representation() = rhs;
+        return *this;
+    }
+
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::TypeConsistencyEnforcement& rhs) {
+        m_qos.type_consistency() = rhs;
         return *this;
     }
 

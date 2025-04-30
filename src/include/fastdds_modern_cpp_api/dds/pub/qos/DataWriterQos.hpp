@@ -55,8 +55,12 @@ public:
         return *this;
     }
 
-    DataWriterQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DatRepresentation& rhs) {
+    DataWriterQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DataRepresentation& rhs) {
         m_qos.representation() = rhs;
+        return *this;
+    }
+
+    DataWriterQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::TypeConsistencyEnforcement& rhs) {
         return *this;
     }
 

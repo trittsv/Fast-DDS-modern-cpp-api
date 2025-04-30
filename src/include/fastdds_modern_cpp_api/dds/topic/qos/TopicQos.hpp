@@ -38,6 +38,16 @@ public:
         nativeQos.history(rhs);
         return *this;
     }
+
+    TopicQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::DataRepresentation& rhs) {
+        nativeQos.representation() = rhs;
+        return *this;
+    }
+
+    TopicQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::TypeConsistencyEnforcement& rhs) {
+        return *this;
+    }
+
     operator eprosima::fastdds::dds::TopicQos&() {
         return nativeQos;
     }
