@@ -53,19 +53,33 @@ public:
         }
     }
 
-    dds::core::InstanceHandle lookup_instance(const T& key) const {
-        return dds::core::InstanceHandle((void*)&key);
+    dds::core::InstanceHandle lookup_instance(const T& sample) const {
+        auto handle = dds::core::InstanceHandle(nativewriter->register_instance(&sample));
+        return handle;
     }
 
-    void dispose_instance(dds::core::InstanceHandle& handle){
-        auto ret = nativewriter->dispose(handle.get_data(), handle);
+    void dispose_instance(dds::core::InstanceHandle& handle) {
+        T keyHolder;
+        auto ret = nativewriter->get_key_value(&keyHolder, handle);
+        if (ret != 0) {
+            throw std::runtime_error("DataWriter failed to get_key_value, return code: " + std::to_string(ret));
+        }
+
+        ret = nativewriter->dispose(&keyHolder, handle);
         if (ret != 0) {
             throw std::runtime_error("DataWriter failed to unregister_instance, return code: " + std::to_string(ret));
         }
     }
 
     void unregister_instance(dds::core::InstanceHandle& handle) {
-        auto ret = nativewriter->unregister_instance(handle.get_data(), handle);
+
+        T keyHolder;
+        auto ret = nativewriter->get_key_value(&keyHolder, handle);
+        if (ret != 0) {
+            throw std::runtime_error("DataWriter failed to get_key_value, return code: " + std::to_string(ret));
+        }
+
+        ret = nativewriter->unregister_instance(&keyHolder, handle);
         if (ret != 0) {
             throw std::runtime_error("DataWriter failed to unregister_instance, return code: " + std::to_string(ret));
         }
@@ -75,11 +89,8 @@ public:
 
     }
 
-    eprosima::fastdds::dds::DataWriter* nativewriter;
-
 private:
-
-    std::map<eprosima::fastdds::rtps::InstanceHandle_t, T> m_instanceIds;
+    eprosima::fastdds::dds::DataWriter* nativewriter;
     
 };
 
