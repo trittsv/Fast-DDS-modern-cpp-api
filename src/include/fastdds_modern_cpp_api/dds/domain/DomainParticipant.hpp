@@ -24,6 +24,9 @@
 #include <fastdds/dds/subscriber/DataReader.hpp>
 #include <fastdds/dds/subscriber/SubscriberListener.hpp>
 
+#include <map>
+
+
 namespace fastdds_modern_cpp_api {
 namespace dds {
 namespace domain {
@@ -79,8 +82,22 @@ public:
 
     template <typename T>
     void register_type() {
-        m_typeSupports.push_back(eprosima::fastdds::dds::TypeSupport(new T()));
-        m_typeSupports.back().register_type(m_pariticpant);
+        auto* pubSubType = new T();
+        auto typeSupport = eprosima::fastdds::dds::TypeSupport(pubSubType);
+        m_typeSupports[typeSupport.get_type_name()] = typeSupport;
+        m_typeSupports[typeSupport.get_type_name()].register_type(m_pariticpant);
+        DomainParticipant::setIsKeyedTopic(typeSupport.get_type_name(), pubSubType->is_compute_key_provided);
+    }
+
+    static void setIsKeyedTopic(const std::string& typeName, bool isKeyed) {
+        getKeyedTopicMap()[typeName] = isKeyed;
+    }
+
+    static bool getIsKeyedTopic(const std::string& typeName) {
+        if (getKeyedTopicMap().count(typeName) >= 1) {
+            return getKeyedTopicMap()[typeName];
+        }
+        return false;
     }
 
     static fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos default_participant_qos() {
@@ -132,10 +149,15 @@ private:
         init(id, m_qos);
     }
 
+    static std::map<std::string, bool>& getKeyedTopicMap() {
+        static std::map<std::string, bool> s_keyedTopics;
+        return s_keyedTopics;
+    }
+
     eprosima::fastdds::dds::DomainParticipant* m_pariticpant;
     fastdds_modern_cpp_api::dds::domain::qos::DomainParticipantQos m_qos;
 
-    std::vector<eprosima::fastdds::dds::TypeSupport> m_typeSupports;
+    std::map<std::string, eprosima::fastdds::dds::TypeSupport> m_typeSupports;
 };
 
 
