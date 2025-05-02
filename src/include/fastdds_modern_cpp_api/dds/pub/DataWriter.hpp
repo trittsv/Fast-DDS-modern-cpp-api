@@ -6,6 +6,7 @@
 #include <fastdds_modern_cpp_api/dds/pub/qos/DataWriterQos.hpp>
 #include <fastdds_modern_cpp_api/dds/pub/Publisher.hpp>
 #include <fastdds_modern_cpp_api/dds/topic/Topic.hpp>
+#include <fastdds_modern_cpp_api/dds/domain/DomainParticipant.hpp>
 
 #include <fastdds/dds/core/condition/Condition.hpp>
 #include <fastdds/dds/core/Entity.hpp>
@@ -47,7 +48,15 @@ public:
     }
 
     void write(const T& sample) {
-        auto ret = nativewriter->write(&sample);
+        eprosima::fastdds::dds::ReturnCode_t ret;
+    
+        if (dds::domain::DomainParticipant::getIsKeyedTopic(dds::topic::topic_type_name<T>::value())) {
+            auto handle = dds::core::InstanceHandle(nativewriter->register_instance(&sample));
+            ret = nativewriter->write(&sample, handle);
+        } else {
+            ret = nativewriter->write(&sample);
+        }
+        
         if (ret != 0) {
             throw std::runtime_error("DataWriter failed to write, return code: " + std::to_string(ret));
         }
