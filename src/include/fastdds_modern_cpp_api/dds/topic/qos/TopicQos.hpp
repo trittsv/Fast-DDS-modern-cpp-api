@@ -48,6 +48,11 @@ public:
         return *this;
     }
 
+    TopicQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::ResourceLimits& rhs) {
+        nativeQos.resource_limits() = rhs;
+        return *this;
+    }
+
     operator eprosima::fastdds::dds::TopicQos&() {
         return nativeQos;
     }
