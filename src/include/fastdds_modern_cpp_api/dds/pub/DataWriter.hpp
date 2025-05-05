@@ -48,21 +48,20 @@ public:
     }
 
     void write(const T& sample) {
-        eprosima::fastdds::dds::ReturnCode_t ret;
-    
-        if (dds::domain::DomainParticipant::getIsKeyedTopic(dds::topic::topic_type_name<T>::value())) {
-            auto handle = dds::core::InstanceHandle(nativewriter->register_instance(&sample));
-            ret = nativewriter->write(&sample, handle);
-        } else {
-            ret = nativewriter->write(&sample);
-        }
-        
+        auto ret = nativewriter->write(&sample);
         if (ret != 0) {
             throw std::runtime_error("DataWriter failed to write, return code: " + std::to_string(ret));
         }
     }
 
     dds::core::InstanceHandle lookup_instance(const T& sample) const {
+
+        /*  eprosima::fastdds::dds::ReturnCode_t ret;
+            if (dds::domain::DomainParticipant::getIsKeyedTopic(dds::topic::topic_type_name<T>::value())) {
+            auto handle = dds::core::InstanceHandle(nativewriter->register_instance(&sample));
+            ret = nativewriter->write(&sample, handle);
+        }*/
+        
         auto handle = dds::core::InstanceHandle(nativewriter->register_instance(&sample));
         return handle;
     }
