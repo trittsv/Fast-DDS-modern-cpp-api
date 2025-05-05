@@ -31,6 +31,23 @@ namespace dds {
 namespace core {
 namespace policy {
 
+class ResourceLimits {
+
+public:
+    ResourceLimits(int32_t max_samples = -1, int32_t max_instances = -1, int32_t max_samples_per_instance = -1) {
+        m_policy.max_samples = max_samples;
+        m_policy.max_instances = max_instances;
+        m_policy.max_samples_per_instance = max_samples_per_instance;
+    }
+
+    operator eprosima::fastdds::dds::ResourceLimitsQosPolicy() const {
+        return m_policy;
+    }
+
+private:
+    eprosima::fastdds::dds::ResourceLimitsQosPolicy m_policy;
+};
+
 enum class TypeConsistencyKind {
     DISALLOW_TYPE_COERCION = 0,
     ALLOW_TYPE_COERCION = 1

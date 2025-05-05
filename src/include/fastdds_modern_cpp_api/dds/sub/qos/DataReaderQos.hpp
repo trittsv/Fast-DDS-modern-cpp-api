@@ -60,6 +60,11 @@ public:
         return *this;
     }
 
+    DataReaderQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::ResourceLimits& rhs) {
+        m_qos.resource_limits() = rhs;
+        return *this;
+    }
+
     operator eprosima::fastdds::dds::DataReaderQos() const {
         return m_qos;
     }
