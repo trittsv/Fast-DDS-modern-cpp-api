@@ -69,6 +69,11 @@ public:
         return *this;
     }
 
+    DataWriterQos& operator<<(const fastdds_modern_cpp_api::dds::core::policy::UserData &rhs) {
+        m_qos.user_data().data_vec(rhs.m_data);
+        return *this;
+    }
+
     operator eprosima::fastdds::dds::DataWriterQos() const {
         return m_qos;
     }

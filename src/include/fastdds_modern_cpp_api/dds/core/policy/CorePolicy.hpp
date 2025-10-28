@@ -91,6 +91,16 @@ public:
     std::string m_name;
 };
 
+class UserData {
+
+public:
+    UserData(const std::vector<uint8_t>& data) : m_data(data) {
+
+    }
+
+    std::vector<uint8_t> m_data;
+};
+
 enum class DataRepresentationId {
     XCDR1 = 0,
     XML = 1,
